@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>День рождения в гончарной мастерской ✨</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Секретное приглашение | День рождения</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,299 +13,395 @@
         }
 
         body {
-            background: linear-gradient(145deg, #fff7f0 0%, #ffe6d5 100%);
-            font-family: 'Quicksand', sans-serif;
-            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background: #E4E2DD; /* fallback */
+        }
+
+        /* ===== РАЗМЫТЫЙ ФОН ===== */
+        .blur-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: url('https://images.pexels.com/photos/3064375/pexels-photo-3064375.jpeg?auto=compress&cs=tinysrgb&w=1600');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(0.7);
+            transform: scale(1.05); /* чтобы не было белых краёв при blur */
+        }
+
+        /* тёмный слой поверх фона (для читаемости) */
+        .blur-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(43, 43, 43, 0.3); /* #2B2B2B с прозрачностью */
+            pointer-events: none;
+        }
+
+        /* ===== ЗАТЕМНЕНИЕ (ОВЕРЛЕЙ) ===== */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .secret-btn {
+            background: rgba(255, 255, 240, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 245, 225, 0.5);
+            padding: 20px 32px;
+            border-radius: 80px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #F7E8D0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            max-width: 85%;
+            line-height: 1.4;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .secret-btn:hover {
+            background: rgba(255, 255, 240, 0.3);
+            transform: scale(1.02);
+            border-color: #EDB588;
+            color: #fff5e8;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ (появляется после клика) ===== */
+        .main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), visibility 0.2s;
+            width: 100%;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 40px 24px;
         }
 
-        /* главная карточка */
-        .invitation {
-            max-width: 550px;
-            margin: 0 auto;
-            background: #fffef7;
-            border-radius: 64px 48px 64px 48px;
-            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
-            overflow: hidden;
-            padding: 32px 28px 48px;
-            position: relative;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 215, 175, 0.5);
+        .main-content.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
-        /* глиняные мазки */
-        .invitation::before {
-            content: "🧱";
-            font-size: 100px;
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            opacity: 0.1;
-            pointer-events: none;
-            transform: rotate(-15deg);
+        /* карточка приглашения — полупрозрачная, нежная */
+        .invitation-card {
+            max-width: 650px;
+            width: 100%;
+            background: rgba(247, 232, 208, 0.92); /* #F7E8D0 с прозрачностью */
+            backdrop-filter: blur(2px);
+            border-radius: 64px 48px 80px 48px;
+            padding: 32px 30px 48px;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255,245,215,0.6);
+            transition: all 0.2s;
         }
 
         h1 {
-            font-size: 2.7rem;
+            font-size: 2.6rem;
             font-weight: 700;
-            color: #c37e5f;
+            color: #A76D5E;
             text-align: center;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            word-break: keep-all;
         }
 
-        .sub {
+        .subhead {
             text-align: center;
-            font-size: 1rem;
-            background: #fce5d8;
+            background: #DFCCB1;
             display: inline-block;
-            width: 100%;
-            padding: 8px 0;
+            width: auto;
+            margin: 0 auto 24px;
+            padding: 6px 24px;
             border-radius: 60px;
-            color: #a55d3e;
             font-weight: 600;
-            margin-bottom: 28px;
+            color: #5e3a28;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
         }
 
-        .chip {
-            background: #ffefdf;
-            padding: 12px 16px;
-            border-radius: 50px;
-            margin: 18px 0;
-            font-weight: 500;
+        .color-chip {
+            background: #C4A07130;
+            border-radius: 80px;
+            padding: 10px 16px;
+            margin: 20px 0;
             display: flex;
-            align-items: center;
-            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+            color: #846044;
+            backdrop-filter: blur(2px);
         }
 
-        .chip span {
-            background: white;
+        .color-chip span {
+            background: #EDB58840;
+            padding: 4px 16px;
             border-radius: 40px;
-            padding: 5px 15px;
-            color: #b96f4a;
+            font-size: 0.9rem;
         }
 
-        .info-grid {
-            background: #fef3e9;
+        .info-block {
+            background: rgba(233, 221, 198, 0.5);
             border-radius: 48px;
             padding: 20px;
             margin: 20px 0;
         }
 
-        .info-item {
+        .info-row {
             display: flex;
-            align-items: baseline;
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 18px;
-            font-size: 1rem;
             flex-wrap: wrap;
+            align-items: baseline;
         }
 
-        .emoji-bg {
-            font-size: 1.8rem;
-            min-width: 45px;
+        .info-icon {
+            font-size: 1.7rem;
+            min-width: 48px;
         }
 
-        .info-item strong {
-            color: #bc6f47;
+        .info-row strong {
+            color: #A76D5E;
             font-weight: 700;
-            min-width: 80px;
+            min-width: 85px;
         }
 
-        .dresscode {
-            background: white;
-            border-radius: 32px;
-            padding: 14px 18px;
-            margin: 18px 0;
-            border-left: 8px solid #e4a37e;
+        .dresscode-box {
+            background: #ffffffc9;
+            border-radius: 36px;
+            padding: 14px 20px;
+            margin: 20px 0;
+            border-left: 8px solid #C96055;
+            color: #3a2a21;
             font-weight: 500;
         }
 
         .gift-wish {
-            background: #fff3e9;
+            background: #E4E2DDcc;
             border-radius: 32px;
-            padding: 18px;
-            margin: 20px 0;
+            padding: 16px 20px;
             font-style: italic;
-            color: #8b5a42;
+            color: #5e3e2c;
+            margin: 20px 0;
         }
 
-        /* карточки гостей */
+        /* секция гостей */
         .guest-section {
-            margin: 40px 0 20px;
+            margin: 45px 0 25px;
         }
 
         .guest-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
+            color: #B97F5C;
             text-align: center;
-            color: #a55d3e;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-        }
-
-        .guest-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+            gap: 10px;
         }
 
         .guest-card {
             background: white;
-            border-radius: 60px 30px 60px 30px;
+            border-radius: 50px 30px 50px 30px;
             padding: 12px 18px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            border: 1px solid #ffe2cd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.2s;
+            border: 1px solid #DFCCB1;
         }
 
         .guest-name {
             font-weight: 800;
             font-size: 1.2rem;
-            color: #3e2a23;
+            color: #2B2B2B;
         }
 
-        .guest-message-btn {
-            background: #f7d5bd;
+        .guest-btn {
+            background: #EDB588;
             border: none;
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-weight: 600;
-            font-family: inherit;
-            color: #7c462c;
+            font-family: 'Poppins', sans-serif;
+            color: #2B2B2B;
             cursor: pointer;
             transition: 0.2s;
             font-size: 0.8rem;
         }
 
-        .guest-message-btn:hover {
-            background: #e9be9a;
-            transform: scale(0.96);
+        .guest-btn:hover {
+            background: #C96055;
+            color: white;
         }
 
         .message-bubble {
-            margin-top: 8px;
-            background: #faeeda;
-            padding: 10px 15px;
-            border-radius: 30px;
+            background: #F7E8D0;
+            padding: 12px 18px;
+            border-radius: 28px;
+            margin: 6px 0 14px 0;
             font-size: 0.9rem;
             display: none;
-            color: #4b2c1b;
+            color: #4f3422;
+            border-left: 4px solid #CBA481;
         }
 
-        .confirm-btn {
+        .rsvp-btn {
             display: block;
             width: 100%;
-            background: #c4815f;
+            background: #C96055;
             border: none;
-            padding: 18px;
+            padding: 16px;
             font-size: 1.3rem;
-            font-weight: bold;
-            font-family: inherit;
-            color: white;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            color: #F7E8D0;
             border-radius: 60px;
-            margin: 25px 0 15px;
+            margin: 30px 0 15px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 6px 0 #7e4a2e;
+            box-shadow: 0 8px 0 #7c3a2f;
         }
 
-        .confirm-btn:active {
+        .rsvp-btn:active {
             transform: translateY(2px);
-            box-shadow: 0 3px 0 #7e4a2e;
+            box-shadow: 0 4px 0 #7c3a2f;
         }
 
-        .footer {
+        .footer-note {
             text-align: center;
-            font-size: 0.75rem;
-            color: #bc9f89;
+            font-size: 0.7rem;
+            color: #A09B8A;
             margin-top: 20px;
         }
 
-        @media (max-width: 480px) {
-            .invitation {
-                padding: 22px 18px 36px;
+        @media (max-width: 550px) {
+            .invitation-card {
+                padding: 24px 18px 36px;
             }
             h1 {
-                font-size: 2rem;
+                font-size: 1.9rem;
+            }
+            .secret-btn {
+                font-size: 1.2rem;
+                padding: 14px 24px;
+            }
+            .guest-card {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+                text-align: center;
+            }
+            .guest-btn {
+                width: fit-content;
+                margin: 0 auto;
             }
         }
     </style>
 </head>
 <body>
-<div class="invitation" id="invitationApp">
-    <h1>🤍 Испечём глину & пиццу 🤍</h1>
-    <div class="sub">It's my birthday party!</div>
 
-    <!-- кодовый адрес-цвет -->
-    <div class="chip">
-        🎨 <strong>Адрес-код:</strong> <span>Жёлто-розовый</span> 🌸🌼
-    </div>
+<!-- размытый фон -->
+<div class="blur-bg"></div>
 
-    <div class="info-grid">
-        <div class="info-item">
-            <div class="emoji-bg">📅</div>
-            <strong>Когда?</strong> 15 июня в 12:00
+<!-- тёмный оверлей с кнопкой -->
+<div class="overlay" id="overlay">
+    <button class="secret-btn" id="revealBtn">
+        📬 ТЕБЕ ПРИШЛО НОВОЕ СООБЩЕНИЕ,<br> 
+        ПОСМОТРИ, ВДРУГ ТАМ ЧТО-ТО ВАЖНОЕ ✨
+    </button>
+</div>
+
+<!-- основное содержание приглашения (изначально скрыто) -->
+<div class="main-content" id="mainContent">
+    <div class="invitation-card">
+        <h1>🤍 Испечём глину & пиццу 🤍</h1>
+        <div style="text-align: center; margin-top: 8px;">
+            <div class="subhead">It's my birthday party!</div>
         </div>
-        <div class="info-item">
-            <div class="emoji-bg">📍</div>
-            <strong>Где?</strong> ул. Полины Осипенко, 2к2, кв.530 <br> 
-            <span style="font-size:0.8rem; margin-left:57px;">(встречаемся у меня, дальше идём в гончарную мастерскую 🏺)</span>
-        </div>
-        <div class="info-item">
-            <div class="emoji-bg">🍕🍣</div>
-            <strong>Что делаем?</strong> Лепим из глины, потом сразу там же едим пиццу и роллы.
-        </div>
-    </div>
 
-    <div class="dresscode">
-        🧥👖 <strong>Дресс-код:</strong> «одежда, которую не жалко» (глина отстирывается, но лучше что-то удобное и с коротким рукавом).
-    </div>
-
-    <div class="gift-wish">
-        🎁 <strong>Пожелание подарков:</strong> Лучший подарок — ты и твоя улыбка! Если хочется — маленький цветок, свечка или красивый камушек. Главное — без формальностей 🌿
-    </div>
-
-    <!-- 4 гостя с индивидуальными пожеланиями -->
-    <div class="guest-section">
-        <div class="guest-title">
-            <span>💌</span> что я желаю каждому? <span>💌</span>
+        <div class="color-chip">
+            🎨 <strong>Адрес-код:</strong> <span>Жёлто-розовый</span>
         </div>
-        <div class="guest-cards" id="guestsContainer">
-            <!-- динамически добавим через JS, но можно и здесь жестко прописать. Я сделаю через JS, чтобы код был гибким, но можно и статикой -->
-        </div>
-    </div>
 
-    <!-- кнопка подтверждения -->
-    <button class="confirm-btn" id="rsvpBtn">✨ Я приду! ✨</button>
-    <div class="footer">
-        🔗 эта ссылка только для тебя и ещё трёх близких ❤️
+        <div class="info-block">
+            <div class="info-row">
+                <div class="info-icon">📅</div>
+                <strong>Когда?</strong> 15 июня в 12:00
+            </div>
+            <div class="info-row">
+                <div class="info-icon">📍</div>
+                <strong>Где?</strong> ул. Полины Осипенко, 2к2, кв.530 <br>
+                <span style="margin-left: 64px; font-size:0.8rem;">→ потом идём в гончарную мастерскую 🏺</span>
+            </div>
+            <div class="info-row">
+                <div class="info-icon">🍕🍣</div>
+                <strong>Что делаем?</strong> Сначала лепим из глины, потом прямо там — пицца и роллы.
+            </div>
+        </div>
+
+        <div class="dresscode-box">
+            🧥👖 <strong>Дресс-код:</strong> «одежда, которую не жалко» (глина легко отстирывается, но лучше удобное и с коротким рукавом).
+        </div>
+
+        <div class="gift-wish">
+            🎁 <strong>Пожелание подарков:</strong> Лучший подарок — твоя улыбка и компания. Если хочется — маленький цветок, свечка или красивый камушек. Никакого формализма 🌿
+        </div>
+
+        <!-- индивидуальные пожелания 4 гостям -->
+        <div class="guest-section">
+            <div class="guest-title">
+                <span>💌</span> что я желаю каждому? <span>💌</span>
+            </div>
+            <div id="guestsList"></div>
+        </div>
+
+        <button class="rsvp-btn" id="rsvpButton">✨ Я приду! ✨</button>
+        <div class="footer-note">
+            🔗 эта ссылка только для тебя и ещё трёх близких ❤️
+        </div>
     </div>
 </div>
 
 <script>
-    // Список гостей (имена можно заменить на настоящие)
-    const guests = [
-        { name: "Гость №1", message: "💫 Желаю иметь надёжное «дно» как у хорошей кружки. Задание: вылепи самую забавную зверушку на ручке своей чашки 🐸" },
-        { name: "Гость №2", message: "🌀 Пусть легко выкручиваешься из любой катастрофы. Задание: придумай смешное название нашему общему глиняному шедевру 😂" },
-        { name: "Гость №3", message: "🌸 Желаю, чтобы жизнь блестела как лучшая глазурь. Задание: замечтайся и оставь на тарелке отпечаток пальца-сердечка 💛" },
-        { name: "Гость №4", message: "🫂 Ты — наш спасательный круг. Задание: выбери самую вкусную пиццу и проследи, чтобы всем хватило соевого соуса 🍕" }
+    // список гостей (замените имена на настоящие, если хотите)
+    const guestsData = [
+        { name: "Гость №1", wish: "💫 Желаю иметь надёжное «дно» как у хорошей кружки. Задание: вылепи самую забавную зверушку на ручке своей чашки 🐸" },
+        { name: "Гость №2", wish: "🌀 Пусть легко выкручиваешься из любой катастрофы. Задание: придумай смешное название нашему общему глиняному шедевру 😂" },
+        { name: "Гость №3", wish: "🌸 Желаю, чтобы жизнь блестела как лучшая глазурь. Задание: замечтайся и оставь на тарелке отпечаток пальца-сердечка 💛" },
+        { name: "Гость №4", wish: "🫂 Ты — наш спасательный круг. Задание: выбери самую вкусную пиццу и проследи, чтобы всем хватило соевого соуса 🍕" }
     ];
 
-    const container = document.getElementById('guestsContainer');
+    const guestsContainer = document.getElementById('guestsList');
     
-    guests.forEach((guest, idx) => {
+    guestsData.forEach((guest, idx) => {
         const cardDiv = document.createElement('div');
         cardDiv.className = 'guest-card';
         
@@ -314,20 +410,20 @@
         nameSpan.textContent = guest.name;
         
         const btn = document.createElement('button');
-        btn.className = 'guest-message-btn';
+        btn.className = 'guest-btn';
         btn.textContent = '✨ открыть пожелание ✨';
         
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
-        bubble.textContent = guest.message;
+        bubble.textContent = guest.wish;
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Закрываем другие баблы (опционально)
+            // скрыть другие открытые
             document.querySelectorAll('.message-bubble').forEach(b => {
-                if(b !== bubble) b.style.display = 'none';
+                if (b !== bubble) b.style.display = 'none';
             });
-            if(bubble.style.display === 'block') {
+            if (bubble.style.display === 'block') {
                 bubble.style.display = 'none';
             } else {
                 bubble.style.display = 'block';
@@ -336,44 +432,55 @@
         
         cardDiv.appendChild(nameSpan);
         cardDiv.appendChild(btn);
-        container.appendChild(cardDiv);
-        container.appendChild(bubble);
+        guestsContainer.appendChild(cardDiv);
+        guestsContainer.appendChild(bubble);
     });
     
-    // кнопка "Я приду" с милым ответом
-    const rsvpBtn = document.getElementById('rsvpBtn');
+    // открытие приглашения по кнопке
+    const overlay = document.getElementById('overlay');
+    const revealBtn = document.getElementById('revealBtn');
+    const mainContent = document.getElementById('mainContent');
+    
+    revealBtn.addEventListener('click', () => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.visibility = 'hidden';
+            mainContent.classList.add('visible');
+        }, 600);
+    });
+    
+    // кнопка "Я приду!" - нежное уведомление
+    const rsvpBtn = document.getElementById('rsvpButton');
     rsvpBtn.addEventListener('click', () => {
-        // Показываем всплывающее уведомление
         const toast = document.createElement('div');
-        toast.innerText = '🍃 Ура! Жду тебя с нетерпением! Будем мять глину и есть роллы 🥹💗';
+        toast.innerText = '🥹 Ура! Жду тебя! Будем мять глину и есть роллы вместе 💗🍕';
         toast.style.position = 'fixed';
         toast.style.bottom = '30px';
         toast.style.left = '50%';
         toast.style.transform = 'translateX(-50%)';
-        toast.style.backgroundColor = '#c4815f';
-        toast.style.color = 'white';
-        toast.style.padding = '14px 24px';
+        toast.style.backgroundColor = '#C96055';
+        toast.style.color = '#F7E8D0';
+        toast.style.padding = '14px 28px';
         toast.style.borderRadius = '60px';
-        toast.style.fontWeight = 'bold';
-        toast.style.fontFamily = 'Quicksand, sans-serif';
-        toast.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
-        toast.style.zIndex = '999';
+        toast.style.fontWeight = '600';
+        toast.style.fontFamily = 'Poppins, sans-serif';
+        toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
+        toast.style.zIndex = '2000';
         toast.style.fontSize = '1rem';
         toast.style.textAlign = 'center';
-        toast.style.maxWidth = '80%';
+        toast.style.backdropFilter = 'blur(4px)';
         document.body.appendChild(toast);
         
         setTimeout(() => {
             toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 500);
+            toast.style.transition = '0.3s';
+            setTimeout(() => toast.remove(), 400);
         }, 4000);
         
-        // Можно отправить даже легкую вибрацию (если на телефоне)
-        if(navigator.vibrate) navigator.vibrate(200);
+        if (navigator.vibrate) navigator.vibrate(100);
     });
     
-    // Небольшой эффект при загрузке
-    console.log('Приглашение загружено! 💌');
+    // предотвращаем скролл под оверлеем (уже норм)
 </script>
 </body>
 </html>
